@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="/stylesheets/onsenui.css">
+  <link rel="stylesheet" href="/stylesheets/onsen-css-components.css">
+  <link rel='stylesheet' href='/stylesheets/editor.css' />
+  <script src="/javascripts/angular.min.js"></script>
+  <script src="/javascripts/onsenui_all.min.js"></script>
+  <script src="/javascripts/fabric.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="/javascripts/jquery.cookie.js"></script>
+  <script src="/javascripts/editor.js"></script>
+  <title><%= title %></title>
+</head>
+<body>
+
+<!-- 編集画面 -->
+<ons-navigator var="myNavigator">
+  <ons-page>
+    <ons-toolbar>
+      <div class="center">帳票編集画面</div>
+    </ons-toolbar>
+
+    <ons-row style="height: 50px" align="center">
+      <ons-col size="300px">
+      </ons-col>
+      <ons-col size="50%">
+        <ons-button id="btn_line" modifier="outline" style="height: 30px;" disabled><ons-icon icon="ion-ios-drag" style="vertical-align: 4px;" size="22px" fixed-width="false"></ons-button>
+        <ons-button id="btn_delete" modifier="outline" style="height: 30px;" disabled><ons-icon icon="ion-ios-trash-outline" style="vertical-align: 4px;" size="22px" fixed-width="false"></ons-button>
+      </ons-col>
+      <ons-col align="right">
+        <ons-button id="btn_save" modifier="outline" style="height: 30px;"><ons-icon icon="ion-android-upload" style="vertical-align: 4px;" size="22px" fixed-width="false"></ons-button>
+      </ons-col>
+    </ons-row>
+    <ons-row>
+      <ons-col size="300px">
+        <ons-list id="partsList"></ons-list>
+      </ons-col>
+      <ons-col>
+        <canvas id="myCanvas">HTML5に対応していないため、ご利用いただけません。</canvas>
+      </ons-col>
+    </ons-row>
+
+
+    <div id="id" hidden="hidden"><%=id%></div>
+    <div id="token" hidden="hidden"><%=token%></div>
+  </ons-page>
+</ons-template>
+
+<!-- 線種選択 -->
+<ons-template id="popover.html">
+  <ons-popover var="popover" direction="down" cancelable>
+    <ons-list>
+      <ons-list-item id="btn_popover_0" modifier="tappable">なし</ons-list-item>
+      <ons-list-item id="btn_popover_1" modifier="tappable">細</ons-list-item>
+      <ons-list-item id="btn_popover_2" modifier="tappable">中</ons-list-item>
+      <ons-list-item id="btn_popover_3" modifier="tappable">太</ons-list-item>
+    </ons-list>
+  </ons-popover>
+</ons-template>
+
+</body>
+</html>
