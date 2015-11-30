@@ -6,6 +6,7 @@ var _layout = null;
 var _parts = null;
 var _canvas = null;
 var _selectedParts = null;
+var _edit = false;
 
 var _rects = [];
 var _texts = [];
@@ -93,7 +94,8 @@ function list_parts_click(index) {
   _layout.parts.push(parts);
   // 描画
   drawPart(parts, _layout.parts.length - 1);
-
+  // 編集フラグセット
+  _edit = true;
 };
 
 // パーツの描画
@@ -176,6 +178,8 @@ function drawPart(part, index) {
     _layout.parts[index].height = rect.getHeight();
     // 枠線とテキストの描画
     movingAndScaling();
+    // 編集フラグセット
+    _edit = true;
   });
 
   // 枠線とテキストの描画
@@ -239,6 +243,7 @@ function getTitle(partsId) {
 
 // パーツの削除
 function btn_delete_click(e) {
+  if (!confirm('削除しますか？')) return false;
   _layout.parts.splice(e.data.index, 1); // レイアウトデータ上でオブジェクトを削除
   console.log('_layout.parts.length:'+_layout.parts.length);
   _canvas.clear();
@@ -282,6 +287,8 @@ function btn_save_click() {
       if (results.status === 'NG') {
         alert('サーバ保存時にエラーが発生しました。（'+results.reason+'）');
         return false;
+      } else {
+        _edit = false;  // 編集フラグをリセット
       }
     },
     error: function(err) {
@@ -297,6 +304,13 @@ ons.ready(function() {
   // idとtokenを取得する
   _id = $("#id").text();
   _token = $("#token").text();
+
+  // ページを離れる時のアテンション
+  $(window).bind('beforeunload', function(e) {
+    if (_edit) {
+      return "編集内容が保存されていません。";
+    }
+  });
 
   // レイアウトデータを取得
   var params = {
