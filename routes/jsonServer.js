@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+var _token = 'abcdefg';
 /**
  * layout
  * レイアウトデータを返却する
@@ -13,11 +14,24 @@ router.post('/layout', function(req, res, next) {
 
   if (id === '' || token === '') {
     console.error('パラメータが不正です。');
-    res.sendStatus(500);
+    var results = {
+      status: 'NG',
+      reason: 'パラメータが不正です。'
+    };
+    res.json(results);
     return;
   }
 
   // Tokenのチェック
+  if (token !== _token) {
+    console.error('トークンが一致しません。');
+    var results = {
+      status: 'NG',
+      reason: 'トークンが一致しません。'
+    };
+    res.json(results);
+    return;
+  }
 
   // jsonを返却する
   var data = {
@@ -25,24 +39,6 @@ router.post('/layout', function(req, res, next) {
     width: 566, // レイアウトエディタで使用するcanvasの横幅（px）
     height: 800,  // レイアウトエディタで使用するcanvasの縦幅（px）
     parts: [
-      /*
-      {
-        partsId: 'parts001',  // レイアウトパーツを識別するID値
-        posX: 10, // パーツの左上の横位置（px）
-        posY: 10, // パーツの左上の縦位置（px）
-        width: 80, // パーツの横幅（px）
-        height: 20, // パーツの高さ（px）
-        thickness: 2, // パーツの線の太さ（0:なし、1:細、2:中、3:太）
-      },
-      {
-        partsId: 'parts002',  // レイアウトパーツを識別するID値
-        posX: 10, // パーツの左上の横位置（px）
-        posY: 30, // パーツの左上の縦位置（px）
-        width: 200, // パーツの横幅（px）
-        height: 20, // パーツの高さ（px）
-        thickness: 0, // パーツの線の太さ（0:なし、1:細、2:中、3:太）
-      },
-      */
     ]
   };
   res.json(data);
@@ -61,11 +57,24 @@ router.post('/parts', function(req, res, next) {
 
   if (id === '' || token === '') {
     console.error('パラメータが不正です。');
-    res.sendStatus(500);
+    var results = {
+      status: 'NG',
+      reason: 'パラメータが不正です。'
+    };
+    res.json(results);
     return;
   }
 
   // Tokenのチェック
+  if (token !== _token) {
+    console.error('トークンが一致しません。');
+    var results = {
+      status: 'NG',
+      reason: 'トークンが一致しません。'
+    };
+    res.json(results);
+    return;
+  }
 
   // jsonを返却する
   var data = {

@@ -114,6 +114,7 @@ function drawPart(part, index) {
     default:
   }
 
+  // 四角形を描画
   var rect = new fabric.Rect({
     fill: '#eee',
     width: width,
@@ -125,18 +126,25 @@ function drawPart(part, index) {
     minScaleLimit: 1,
     index: index
   });
+
+  // 移動時のイベント
   rect.on('moving', function() {
     // 枠ハズレチェック
     if (rect.getTop() < 0) rect.set('top', 0);
     if (rect.getLeft() < 0) rect.set('left', 0);
     if (rect.getTop()+rect.getHeight() > _canvas.getHeight()) rect.set('top', _canvas.getHeight()-rect.getHeight());
     if (rect.getLeft()+rect.getWidth() > _canvas.getWidth()) rect.set('left', _canvas.getWidth()-rect.getWidth());
+    // グリッド表示
     rect.setLeft(Math.floor(rect.getLeft()) - (Math.floor(rect.getLeft()) % grid));
     rect.setTop(Math.floor(rect.getTop()) - (Math.floor(rect.getTop()) % grid));
+    // 配列に保存
     _layout.parts[index].posX = rect.getLeft();
     _layout.parts[index].posY = rect.getTop();
+    // 枠線とテキストの描画
     movingAndScaling();
   });
+
+  // 編集終了後のイベント
   rect.on('modified', function() {
     var width = Math.floor(rect.width * rect.scaleX) - (Math.floor(rect.width * rect.scaleX) % grid);
     var height = Math.floor(rect.height * rect.scaleY) - (Math.floor(rect.height * rect.scaleY) % grid);
@@ -146,54 +154,36 @@ function drawPart(part, index) {
       scaleX: 1,
       scaleY: 1
     });
-
     // 枠ハズレチェック
-    if (rect.getTop() < 0) {
-      rect.set('top', 0);
+    if (rect.getTop() < 0) {  // 上ハズレ
       rect.set('height', (rect.getHeight() + rect.getTop()));
+      rect.set('top', 0);
     }
-    if (rect.getLeft()+rect.getWidth() > _canvas.getWidth()) {
+    if (rect.getLeft() < 0) {  // 左ハズレ
+      rect.set('width', (rect.getWidth() + rect.getLeft()));
+      rect.set('left', 0);
+    }
+    if (rect.getTop()+rect.getHeight() > _canvas.getHeight()) { // 下ハズレ
+      rect.set('height', rect.getHeight() - ((rect.getTop() + rect.getHeight()) - _canvas.getHeight()));
+    }
+    if (rect.getLeft()+rect.getWidth() > _canvas.getWidth()) {  // 右ハズレ
       rect.set('width', rect.getWidth() - ((rect.getLeft() + rect.getWidth()) - _canvas.getWidth()));
     }
+    // 配列に保存
     _layout.parts[index].posX = rect.getLeft();
     _layout.parts[index].posY = rect.getTop();
     _layout.parts[index].width = rect.getWidth();
     _layout.parts[index].height = rect.getHeight();
+    // 枠線とテキストの描画
     movingAndScaling();
-  });
-  rect.on('scaling', function() {
-    /*
-    console.log(rect);
-    // 縦横比を再計算
-    var newWidth = rect.getWidth() * Math.abs(rect.getScaleX());
-    var newHeight = rect.getHeight() * Math.abs(rect.getScaleY());
-    rect.set({
-      width: Math.floor(newWidth),
-      height: Math.floor(newHeight),
-      scaleX: 1,
-      scaleY: 1
-    });
-    // 枠ハズレチェック
-    if (rect.getTop() < 0) {
-      rect.set('top', 0);
-      rect.set('height', (rect.getHeight() + rect.getTop()));
-    }
-    if (rect.getLeft()+rect.getWidth() > _canvas.getWidth()) {
-      rect.set('width', rect.getWidth() - ((rect.getLeft() + rect.getWidth()) - _canvas.getWidth()));
-    }
-    _layout.parts[index].posX = rect.getLeft();
-    _layout.parts[index].posY = rect.getTop();
-    _layout.parts[index].width = rect.getWidth();
-    _layout.parts[index].height = rect.getHeight();
-    movingAndScaling();
-    */
   });
 
+  // 枠線とテキストの描画
   function movingAndScaling() {
-    // テキストを追随
+    // テキスト
     text.set('top', rect.getTop() + 2);
     text.set('left', rect.getLeft() + 2);
-    // 枠線を追随
+    // 枠線
     line1.set({ 'x1': rect.getLeft(), 'y1': rect.getTop(), 'x2': rect.getLeft()+rect.getWidth(), 'y2': rect.getTop() });
     line2.set({ 'x1': rect.getLeft()+rect.getWidth(), 'y1': rect.getTop(), 'x2': rect.getLeft()+rect.getWidth(), 'y2': rect.getTop()+rect.getHeight() });
     line3.set({ 'x1': rect.getLeft()+rect.getWidth(), 'y1': rect.getTop()+rect.getHeight(), 'x2': rect.getLeft(), 'y2': rect.getTop()+rect.getHeight() });
@@ -257,10 +247,12 @@ function btn_delete_click(e) {
   });
 };
 
-// 線種の選択
+// 線種ボタンを押下
 function btn_line_click(e) {
   popover.show(this);
 };
+
+// 線種を選択
 function btn_popover_select(e) {
   var index = e.data.index;
   var stroke = e.data.stroke;
@@ -317,6 +309,10 @@ ons.ready(function() {
     data: params,
     timeout: 10000,
     success: function(layout) {
+      if (layout.status) {  // statusが戻っている時点でエラーが発生したと判断
+        alert(layout.reason);
+        return false;
+      }
       _layout = layout;
       // 部品データを取得
       $.ajax({
@@ -325,6 +321,10 @@ ons.ready(function() {
         data: params,
         timeout: 10000,
         success: function(parts) {
+          if (parts.status) {  // statusが戻っている時点でエラーが発生したと判断
+            alert(layout.reason);
+            return false;
+          }
           _parts = parts;
           drawInit();
         },
