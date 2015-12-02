@@ -16,7 +16,6 @@ router.get('/', function(req, res, next) {
   }
 
   res.render('editor', {
-    title: 'canvasEditor - 帳票設計画面',
     id: id,
     token: token
   });

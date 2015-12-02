@@ -79,21 +79,15 @@ router.post('/parts', function(req, res, next) {
   // jsonを返却する
   var data = {
     parts: [
-      { partsId: 'parts001', title: 'タイトル' },
-      { partsId: 'parts002', title: 'クラス名' },
-      { partsId: 'parts003', title: '園児名' },
-      { partsId: 'parts004', title: '保育の月間目標' },
-      { partsId: 'parts005', title: '今月の行事予定' },
-      { partsId: 'parts006', title: '子供の姿' },
-      { partsId: 'parts007', title: '養護に関わる狙い' },
-      { partsId: 'parts008', title: '教育に関わる狙い' },
-      { partsId: 'parts009', title: '養護に関わる内容' },
-      { partsId: 'parts010', title: '教育に関わる内容' },
-      { partsId: 'parts011', title: '食育' },
-      { partsId: 'parts012', title: 'この時期の遊具' },
-      { partsId: 'parts013', title: '配慮と環境構成' },
-      { partsId: 'parts014', title: '連携' },
-      { partsId: 'parts015', title: '評価' },
+      { partsId: 'parts001', title: 'パーツ１' },
+      { partsId: 'parts002', title: 'パーツ２' },
+      { partsId: 'parts003', title: 'パーツ３' },
+      { partsId: 'parts004', title: 'パーツ４' },
+      { partsId: 'parts005', title: 'パーツ５' },
+      { partsId: 'parts006', title: 'パーツ６' },
+      { partsId: 'parts007', title: 'パーツ７' },
+      { partsId: 'parts008', title: 'パーツ８' },
+      { partsId: 'parts009', title: 'パーツ９' },
     ]
   };
   res.json(data);
