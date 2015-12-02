@@ -118,7 +118,7 @@ function drawPart(part, index) {
 
   // 四角形を描画
   var rect = new fabric.Rect({
-    fill: '#eee',
+    fill: '#ccc',
     width: width,
     height: height,
     top: top,
@@ -126,6 +126,7 @@ function drawPart(part, index) {
     lockRotation: true,
     selectable: true,
     minScaleLimit: 1,
+    opacity: 0.5,
     index: index
   });
 
