@@ -35,7 +35,6 @@ router.post('/layout', function(req, res, next) {
 
   // jsonを返却する
   var data = {
-    id: id,  // レイアウトデータを識別するID値
     width: 566, // レイアウトエディタで使用するcanvasの横幅（px）
     height: 800,  // レイアウトエディタで使用するcanvasの縦幅（px）
     parts: [
