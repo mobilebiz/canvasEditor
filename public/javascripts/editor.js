@@ -129,6 +129,7 @@ function drawPart(part, index) {
     opacity: 0.5,
     index: index
   });
+  rect.setControlsVisibility({'mtr': false});
 
   // 移動時のイベント
   rect.on('moving', function() {
