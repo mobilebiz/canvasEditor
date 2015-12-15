@@ -133,24 +133,24 @@ function drawPart(part, index) {
   // 移動時のイベント
   rect.on('moving', function() {
     // 枠ハズレチェック
-    if (rect.getTop() < 0) rect.set('top', 0);
-    if (rect.getLeft() < 0) rect.set('left', 0);
-    if (rect.getTop()+rect.getHeight() > _canvas.getHeight()) rect.set('top', _canvas.getHeight()-rect.getHeight());
-    if (rect.getLeft()+rect.getWidth() > _canvas.getWidth()) rect.set('left', _canvas.getWidth()-rect.getWidth());
+    if (Number(rect.getTop()) < 0) rect.set('top', 0);
+    if (Number(rect.getLeft()) < 0) rect.set('left', 0);
+    if (Number(rect.getTop())+Number(rect.getHeight()) > Number(_canvas.getHeight())) rect.set('top', Number(_canvas.getHeight())-Number(rect.getHeight()));
+    if (Number(rect.getLeft())+Number(rect.getWidth()) > Number(_canvas.getWidth())) rect.set('left', Number(_canvas.getWidth())-Number(rect.getWidth()));
     // グリッド表示
-    rect.setLeft(Math.floor(rect.getLeft()) - (Math.floor(rect.getLeft()) % grid));
-    rect.setTop(Math.floor(rect.getTop()) - (Math.floor(rect.getTop()) % grid));
+    rect.setLeft(Math.floor(Number(rect.getLeft())) - (Math.floor(Number(rect.getLeft())) % grid));
+    rect.setTop(Math.floor(Number(rect.getTop())) - (Math.floor(Number(rect.getTop())) % grid));
     // 配列に保存
-    _layout.parts[index].posX = rect.getLeft();
-    _layout.parts[index].posY = rect.getTop();
+    _layout.parts[index].posX = Number(rect.getLeft());
+    _layout.parts[index].posY = Number(rect.getTop());
     // 枠線とテキストの描画
     movingAndScaling();
   });
 
   // 編集終了後のイベント
   rect.on('modified', function() {
-    var width = Math.floor(rect.width * rect.scaleX) - (Math.floor(rect.width * rect.scaleX) % grid);
-    var height = Math.floor(rect.height * rect.scaleY) - (Math.floor(rect.height * rect.scaleY) % grid);
+    var width = Math.floor(Number(rect.width) * Number(rect.scaleX)) - (Math.floor(Number(rect.width) * Number(rect.scaleX)) % grid);
+    var height = Math.floor(Number(rect.height) * Number(rect.scaleY)) - (Math.floor(Number(rect.height) * Number(rect.scaleY)) % grid);
     rect.set({
       width: width,
       height: height,
@@ -158,25 +158,25 @@ function drawPart(part, index) {
       scaleY: 1
     });
     // 枠ハズレチェック
-    if (rect.getTop() < 0) {  // 上ハズレ
-      rect.set('height', (rect.getHeight() + rect.getTop()));
+    if (Number(rect.getTop()) < 0) {  // 上ハズレ
+      rect.set('height', (Number(rect.getHeight()) + Number(rect.getTop())));
       rect.set('top', 0);
     }
-    if (rect.getLeft() < 0) {  // 左ハズレ
-      rect.set('width', (rect.getWidth() + rect.getLeft()));
+    if (Number(rect.getLeft()) < 0) {  // 左ハズレ
+      rect.set('width', (Number(rect.getWidth()) + Number(rect.getLeft())));
       rect.set('left', 0);
     }
-    if (rect.getTop()+rect.getHeight() > _canvas.getHeight()) { // 下ハズレ
-      rect.set('height', rect.getHeight() - ((rect.getTop() + rect.getHeight()) - _canvas.getHeight()));
+    if (Number(rect.getTop())+Number(rect.getHeight()) > Number(_canvas.getHeight())) { // 下ハズレ
+      rect.set('height', Number(rect.getHeight()) - ((Number(rect.getTop()) + Number(rect.getHeight())) - Number(_canvas.getHeight())));
     }
-    if (rect.getLeft()+rect.getWidth() > _canvas.getWidth()) {  // 右ハズレ
-      rect.set('width', rect.getWidth() - ((rect.getLeft() + rect.getWidth()) - _canvas.getWidth()));
+    if (Number(rect.getLeft())+Number(rect.getWidth()) > Number(_canvas.getWidth())) {  // 右ハズレ
+      rect.set('width', Number(rect.getWidth()) - ((Number(rect.getLeft()) + Number(rect.getWidth())) - Number(_canvas.getWidth())));
     }
     // 配列に保存
-    _layout.parts[index].posX = rect.getLeft();
-    _layout.parts[index].posY = rect.getTop();
-    _layout.parts[index].width = rect.getWidth();
-    _layout.parts[index].height = rect.getHeight();
+    _layout.parts[index].posX = Number(rect.getLeft());
+    _layout.parts[index].posY = Number(rect.getTop());
+    _layout.parts[index].width = Number(rect.getWidth());
+    _layout.parts[index].height = Number(rect.getHeight());
     // 枠線とテキストの描画
     movingAndScaling();
     // 編集フラグセット
@@ -186,13 +186,13 @@ function drawPart(part, index) {
   // 枠線とテキストの描画
   function movingAndScaling() {
     // テキスト
-    text.set('top', rect.getTop() + 2);
-    text.set('left', rect.getLeft() + 2);
+    text.set('top', Number(rect.getTop()) + 2);
+    text.set('left', Number(rect.getLeft()) + 2);
     // 枠線
-    line1.set({ 'x1': rect.getLeft(), 'y1': rect.getTop(), 'x2': rect.getLeft()+rect.getWidth(), 'y2': rect.getTop() });
-    line2.set({ 'x1': rect.getLeft()+rect.getWidth(), 'y1': rect.getTop(), 'x2': rect.getLeft()+rect.getWidth(), 'y2': rect.getTop()+rect.getHeight() });
-    line3.set({ 'x1': rect.getLeft()+rect.getWidth(), 'y1': rect.getTop()+rect.getHeight(), 'x2': rect.getLeft(), 'y2': rect.getTop()+rect.getHeight() });
-    line4.set({ 'x1': rect.getLeft(), 'y1': rect.getTop()+rect.getHeight(), 'x2': rect.getLeft(), 'y2': rect.getTop() });
+    line1.set({ 'x1': Number(rect.getLeft()), 'y1': Number(rect.getTop()), 'x2': Number(rect.getLeft())+Number(rect.getWidth()), 'y2': Number(rect.getTop()) });
+    line2.set({ 'x1': Number(rect.getLeft())+Number(rect.getWidth()), 'y1': Number(rect.getTop()), 'x2': Number(rect.getLeft())+Number(rect.getWidth()), 'y2': Number(rect.getTop())+Number(rect.getHeight()) });
+    line3.set({ 'x1': Number(rect.getLeft())+Number(rect.getWidth()), 'y1': Number(rect.getTop())+Number(rect.getHeight()), 'x2': Number(rect.getLeft()), 'y2': Number(rect.getTop())+Number(rect.getHeight()) });
+    line4.set({ 'x1': Number(rect.getLeft()), 'y1': Number(rect.getTop())+Number(rect.getHeight()), 'x2': Number(rect.getLeft()), 'y2': Number(rect.getTop()) });
   };
 
   // テキスト
@@ -205,10 +205,10 @@ function drawPart(part, index) {
   });
 
   // 枠線
-  var line1 = makeLine([ rect.getLeft(), rect.getTop(), rect.getLeft()+rect.getWidth(), rect.getTop() ], stroke, strokeWidth),
-      line2 = makeLine([ rect.getLeft()+rect.getWidth(), rect.getTop(), rect.getLeft()+rect.getWidth(), rect.getTop()+rect.getHeight() ], stroke, strokeWidth),
-      line3 = makeLine([ rect.getLeft()+rect.getWidth(), rect.getTop()+rect.getHeight(), rect.getLeft(), rect.getTop()+rect.getHeight() ], stroke, strokeWidth),
-      line4 = makeLine([ rect.getLeft(), rect.getTop()+rect.getHeight(), rect.getLeft(), rect.getTop() ], stroke, strokeWidth);
+  var line1 = makeLine([ Number(rect.getLeft()), Number(rect.getTop()), Number(rect.getLeft())+Number(rect.getWidth()), Number(rect.getTop()) ], stroke, strokeWidth),
+      line2 = makeLine([ Number(rect.getLeft())+Number(rect.getWidth()), Number(rect.getTop()), Number(rect.getLeft())+Number(rect.getWidth()), Number(rect.getTop())+Number(rect.getHeight()) ], stroke, strokeWidth),
+      line3 = makeLine([ Number(rect.getLeft())+Number(rect.getWidth()), Number(rect.getTop())+Number(rect.getHeight()), Number(rect.getLeft()), Number(rect.getTop())+Number(rect.getHeight()) ], stroke, strokeWidth),
+      line4 = makeLine([ Number(rect.getLeft()), Number(rect.getTop())+Number(rect.getHeight()), Number(rect.getLeft()), Number(rect.getTop()) ], stroke, strokeWidth);
 
   // 配列に保存
   _rects[index] = rect;
@@ -337,7 +337,7 @@ ons.ready(function() {
         timeout: 10000,
         success: function(parts) {
           if (parts.status) {  // statusが戻っている時点でエラーが発生したと判断
-            alert(layout.reason);
+            alert(parts.reason);
             return false;
           }
           _parts = parts;
