@@ -6,6 +6,7 @@ var _layout = null;
 var _parts = null;
 var _canvas = null;
 var _selectedParts = null;
+var _selectedPartsIndex = null;
 var _edit = false;
 
 var _rects = [];
@@ -37,6 +38,8 @@ function drawInit() {
   // パーツが選択された
   _canvas.on('object:selected', function(e) {
     console.log('object selected. ' + e.target.index + '/' + _layout.parts.length);
+    _selectedParts = _layout.parts[e.target.index];
+    _selectedPartsIndex = e.target.index;
     $("#btn_line").removeAttr("disabled");
     $("#btn_line").off('click');
     $("#btn_line").on('click', { index: e.target.index }, btn_line_click);
@@ -51,6 +54,8 @@ function drawInit() {
   });
   // パーツの選択が外れた
   _canvas.on('selection:cleared' ,function() {
+    _selectedParts = null;
+    _selectedPartsIndex = null;
     $("#btn_line").attr("disabled", "disabled");
     $("#btn_delete").attr("disabled", "disabled");
     for (var i=0; i<4; i++) {
@@ -301,6 +306,71 @@ function btn_save_click() {
 
 };
 
+// キーボードが押されたときの処理
+function keydownEvent(e) {
+  if (_selectedParts) { // パーツが選択されている
+    var obj = _canvas._activeObject;  // 選択中のオブジェクトを退避
+    var fDraw = false;   // 再描画フラグ
+    switch (e.keyCode) {
+      case 37:  // 左矢印
+        if (e.shiftKey) {
+          // 幅縮小
+          if (_selectedParts.width - grid >= 0) _selectedParts.width = _selectedParts.width - grid;
+        } else {
+          // 左に移動
+          if (_selectedParts.posX - grid >= 0) _selectedParts.posX = _selectedParts.posX - grid;
+        }
+        fDraw = true;
+        break;
+      case 38:  // 上矢印
+        if (e.shiftKey) {
+          // 高さ縮小
+          if (_selectedParts.height - grid >= 0) _selectedParts.height = _selectedParts.height - grid;
+        } else {
+          // 上に移動
+          if (_selectedParts.posY - grid >= 0) _selectedParts.posY = _selectedParts.posY - grid;
+        }
+        fDraw = true;
+        break;
+      case 39:  // 右矢印
+        if (e.shiftKey) {
+          // 幅拡大
+          if (_selectedParts.posX + _selectedParts.width + grid <= _canvas.width) _selectedParts.width = _selectedParts.width + grid;
+        } else {
+          // 右に移動
+          if (_selectedParts.posX + _selectedParts.width + grid <= _canvas.width) _selectedParts.posX = _selectedParts.posX + grid;
+        }
+        fDraw = true;
+        break;
+      case 40:  // 下矢印
+        if (e.shiftKey) {
+          // 高さ拡大
+          if (_selectedParts.posY + _selectedParts.height + grid <= _canvas.height) _selectedParts.height = _selectedParts.height + grid;
+        } else {
+          // 下に移動
+          if (_selectedParts.posY + _selectedParts.height + grid <= _canvas.height) _selectedParts.posY = _selectedParts.posY + grid;
+        }
+        fDraw = true;
+        break;
+    }
+    if (fDraw) {
+      // 描画
+      _layout.parts[_selectedPartsIndex] = _selectedParts;
+      _canvas.clear();
+      _layout.parts.forEach(function(part, index) {
+        drawPart(part, index);
+      });
+      // オブジェクトの選択
+      obj.set('active', true);
+      _canvas.setActiveObject(obj);
+      // ブラウザのスクロールを防止
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
+    }
+  }
+};
+
 ons.bootstrap();
 ons.ready(function() {
   // idとtokenを取得する
@@ -313,6 +383,11 @@ ons.ready(function() {
       return "編集内容が保存されていません。";
     }
   });
+
+  // キーボードイベント取得
+  var myCanvasWrapper = document.getElementById('myCanvasWrapper');
+  myCanvasWrapper.tabIndex = 1000;
+  myCanvasWrapper.addEventListener("keydown", keydownEvent, false);
 
   // レイアウトデータを取得
   var params = {
