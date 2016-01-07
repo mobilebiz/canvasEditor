@@ -225,7 +225,7 @@ function drawPart(part, index) {
   _line4s[index] = line4;
 
   // 描画
-  _canvas.add(_rects[index], _texts[index], _line1s[index], _line2s[index], _line3s[index], _line4s[index]);
+  _canvas.add(_texts[index], _line1s[index], _line2s[index], _line3s[index], _line4s[index], _rects[index]);
 
 };
 
